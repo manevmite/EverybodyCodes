@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="EmbeddedCsvCameraStore.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\EveryoneCodes.Core\EveryoneCodes.Core.csproj" />
     <ProjectReference Include="..\EveryoneCodes.Shared\EveryoneCodes.Shared.csproj" />
   </ItemGroup>

@@ -1,5 +1,5 @@
-﻿using EveryoneCodes.Core.Models;
-using EveryoneCodes.Shared.Interfaces;
+﻿using EveryoneCodes.Core.Interfaces;
+using EveryoneCodes.Core.Models;
 using FluentAssertions;
 using Moq;
 

@@ -1,6 +1,5 @@
 ﻿using EveryoneCodes.Core.Interfaces;
 using EveryoneCodes.Core.Models;
-using EveryoneCodes.Shared.Interfaces;
 
 namespace EveryoneCodes.Application
 {

@@ -19,8 +19,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CLI", "CLI", "{6E110FBA-164
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EveryoneCodes.Cli", "EveryoneCodes.Cli\EveryoneCodes.Cli.csproj", "{65E15FC6-C8D9-446B-97A4-5664A20EE227}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EveryoneCodes.Shared", "EveryoneCodes.Shared\EveryoneCodes.Shared.csproj", "{5259E86F-0190-4861-B9C3-375A5D3FC446}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EveryoneCodes.Application.Tests", "EveryoneCodes.Application.Tests\EveryoneCodes.Application.Tests.csproj", "{B047AAC6-1AAB-45C9-8AA2-9090C0661D4B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EveryoneCodes.Api.Tests", "EveryoneCodes.Api.Tests\EveryoneCodes.Api.Tests.csproj", "{76C305F3-06DD-4FCC-8B69-C1A6F4771171}"
@@ -53,10 +51,6 @@ Global
 		{65E15FC6-C8D9-446B-97A4-5664A20EE227}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65E15FC6-C8D9-446B-97A4-5664A20EE227}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65E15FC6-C8D9-446B-97A4-5664A20EE227}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5259E86F-0190-4861-B9C3-375A5D3FC446}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5259E86F-0190-4861-B9C3-375A5D3FC446}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5259E86F-0190-4861-B9C3-375A5D3FC446}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5259E86F-0190-4861-B9C3-375A5D3FC446}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B047AAC6-1AAB-45C9-8AA2-9090C0661D4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B047AAC6-1AAB-45C9-8AA2-9090C0661D4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B047AAC6-1AAB-45C9-8AA2-9090C0661D4B}.Release|Any CPU.ActiveCfg = Release|Any CPU

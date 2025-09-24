@@ -1,11 +1,10 @@
 ﻿using EveryoneCodes.Core.Configuration;
 using EveryoneCodes.Core.Interfaces;
 using EveryoneCodes.Core.Models;
-using EveryoneCodes.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace EveryoneCodes.Shared
+namespace EveryoneCodes.Application
 {
     public class EmbeddedCsvCameraStore : ICameraStore
     {
