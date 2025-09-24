@@ -1,0 +1,64 @@
+# --- Git / OS ---
+.DS_Store
+Thumbs.db
+
+# --- Visual Studio / .NET ---
+.vs/
+**/bin/
+**/obj/
+TestResults/
+*.user
+*.suo
+*.rsuser
+
+# NuGet
+**/packages/
+*.nupkg
+*.snupkg
+
+# Rider / VS Code / Idea
+.idea/
+.vscode/
+*.ReSharper*/
+*_ReSharper.Caches/
+
+# Logs
+logs/
+*.log
+**/serilog-*.json
+
+# Coverage / analysis
+coverage/
+*.opencover.xml
+*.lcov
+*.coverlet.*
+
+# --- Node / Frontend (Angular/React/etc.) ---
+**/node_modules/
+**/.angular/
+**/.next/
+**/.turbo/
+**/.cache/
+**/.eslintcache
+**/.pnpm-store/
+**/dist/
+**/build/
+**/.parcel-cache/
+
+# Env / secrets (keep only sample files)
+*.env
+*.env.*
+!.env.example
+
+# Tooling / lockfiles you don't want (adjust to your workflow)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# --- Data (optional; keep sample data only) ---
+data/**/*.tmp
+data/**/*.bak
+data/**/cache/**
+# Uncomment to ignore all CSVs in data except a sample:
+# data/**/*.csv
+# !data/sample.csv
