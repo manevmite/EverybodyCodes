@@ -1,0 +1,111 @@
+<div class="toolbar">
+    <input [(ngModel)]="q" placeholder="Search by name…" />
+    <button (click)="searchByName(q)">Search</button>
+</div>
+
+<div id="source">
+    source:
+    <a href="https://data.overheid.nl/dataset/camera-s">https://data.overheid.nl/dataset/camera-s</a>
+</div>
+
+<table id="cameraTableContainer">
+    <tbody>
+        <tr>
+            <td>
+                <table id="column3">
+                    <thead>
+                        <tr>
+                            <th colspan="4">Cameras 3</th>
+                        </tr>
+                        <tr>
+                            <th>Number</th>
+                            <th>Name</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let c of col1">
+                            <td>{{ c.number }}</td>
+                            <td>{{ c.name }}</td>
+                            <td>{{ c.latitude }}</td>
+                            <td>{{ c.longitude }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td>
+                <table id="column5">
+                    <thead>
+                        <tr>
+                            <th colspan="4">Cameras 5</th>
+                        </tr>
+                        <tr>
+                            <th>Number</th>
+                            <th>Name</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let c of col2">
+                            <td>{{ c.number }}</td>
+                            <td>{{ c.name }}</td>
+                            <td>{{ c.latitude }}</td>
+                            <td>{{ c.longitude }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td>
+                <table id="column15">
+                    <thead>
+                        <tr>
+                            <th colspan="4">Cameras 3 & 5</th>
+                        </tr>
+                        <tr>
+                            <th>Number</th>
+                            <th>Name</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let c of col3">
+                            <td>{{ c.number }}</td>
+                            <td>{{ c.name }}</td>
+                            <td>{{ c.latitude }}</td>
+                            <td>{{ c.longitude }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td>
+                <table id="columnOther">
+                    <thead>
+                        <tr>
+                            <th colspan="4">Cameras Overig</th>
+                        </tr>
+                        <tr>
+                            <th>Number</th>
+                            <th>Name</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let c of col4">
+                            <td>{{ c.number }}</td>
+                            <td>{{ c.name }}</td>
+                            <td>{{ c.latitude }}</td>
+                            <td>{{ c.longitude }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<h1>Security cameras Utrecht</h1>
+<app-map [cameras]="cameras"></app-map>

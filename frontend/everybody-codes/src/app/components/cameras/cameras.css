@@ -1,0 +1,116 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.8em;
+}
+
+a {
+  color: #ff6e00;
+}
+
+.toolbar {
+  background: rgba(27, 31, 35, 0.08);
+  width: 290px;
+  padding: 8px;
+  border-radius: 20px;
+  margin: 15px auto;
+  text-align: center;
+}
+
+.toolbar input {
+  margin-right: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.toolbar button {
+  padding: 5px 10px;
+  background: #ff6e00;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.toolbar button:hover {
+  background: #e55a00;
+}
+
+#source {
+  background: rgba(27, 31, 35, 0.08);
+  width: 290px;
+  padding: 8px;
+  border-radius: 20px;
+  margin: 15px auto;
+  text-align: center;
+}
+
+#source a {
+  font-weight: bold;
+}
+
+table td {
+  vertical-align: top;
+}
+
+table thead tr:nth-child(1) th {
+  height: 75px;
+  background-color: #272727;
+  color: #7F7F7C;
+  font-size: 3.0em;
+}
+
+table tr:nth-child(2) th {
+  text-align: left;
+  height: 25px;
+}
+
+h1 {
+  padding: 20px 0 20px 55px;
+  margin: 0 0 0 20px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='%23ff6e00'%3E%3Cpath d='M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z'/%3E%3C/svg%3E") no-repeat;
+  background-size: 40px;
+  background-position: 0 50%;
+}
+
+#cameraTableContainer {
+  margin: 0 0 20px 0;
+  width: 100%;
+  padding: 0 20px;
+  height: 100%;
+  vertical-align: top;
+}
+
+#cameraTableContainer>td {
+  width: 25%;
+  text-align: center;
+}
+
+#cameraTableContainer table {
+  width: 450px;
+  margin: auto;
+  height: 100%;
+  border-collapse: collapse;
+}
+
+#cameraTableContainer table tbody tr {
+  height: 25px;
+  vertical-align: middle;
+}
+
+#cameraTableContainer table tbody td {
+  padding: 5px 0;
+}
+
+#cameraTableContainer table td:nth-child(1) {
+  height: 15px !important;
+  margin-right: 15px;
+  font-weight: bold;
+  border-radius: 20px;
+}
+
+#cameraTableContainer table tr:last-child td {
+  height: 100%;
+}

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.8.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EveryoneCodes.Application\EveryoneCodes.Application.csproj" />
+    <ProjectReference Include="..\EveryoneCodes.Core\EveryoneCodes.Core.csproj" />
+    <ProjectReference Include="..\EveryoneCodes.Infrastructure\EveryoneCodes.Infrastructure.csproj" />
+    <ProjectReference Include="..\EveryoneCodes.Shared\EveryoneCodes.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
