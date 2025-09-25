@@ -8,26 +8,16 @@ namespace EveryoneCodes.Api.Controllers
     public class CamerasController : ControllerBase
     {
         private readonly ICameraService _cameraService;
-        private readonly ILogger<CamerasController> _logger;
-        public CamerasController(ICameraService cameraService, ILogger<CamerasController> logger)
+        public CamerasController(ICameraService cameraService)
         {
             _cameraService = cameraService;
-            _logger = logger;
         }
 
         [HttpGet()]
         public async Task<IActionResult> GetAllCameras()
         {
-            try
-            {
-                var cameras = await _cameraService.GetAllAsync();
-                return Ok(cameras);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to get all cameras");
-                return Problem(detail: "Unexpected error while fetching cameras.");
-            }
+            var cameras = await _cameraService.GetAllAsync();
+            return Ok(cameras);
         }
 
         [HttpGet("search")]
@@ -38,16 +28,8 @@ namespace EveryoneCodes.Api.Controllers
                 return BadRequest("Query parameter 'name' is required.");
             }
 
-            try
-            {
-                var cameras = await _cameraService.SearchAsync(name);
-                return Ok(cameras);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Search failed for query '{Name}'", name);
-                return Problem(detail: "Unexpected error while searching cameras.");
-            }
+            var cameras = await _cameraService.SearchAsync(name);
+            return Ok(cameras);
         }
     }
 }

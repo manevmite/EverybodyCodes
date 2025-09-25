@@ -1,3 +1,4 @@
+using EveryoneCodes.Api.Middleware;
 using EveryoneCodes.Application;
 using EveryoneCodes.Core.Interfaces;
 using EveryoneCodes.Infrastructure.Extensions;
@@ -43,6 +44,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AngularDev");
+
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+
 app.UseAuthorization();
 app.MapControllers();
 
