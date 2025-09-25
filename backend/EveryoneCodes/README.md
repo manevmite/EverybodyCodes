@@ -8,17 +8,17 @@ EveryoneCodes is a camera management system that provides functionality to searc
 
 ## Architecture
 
-The solution is organized into the following projects:
+The solution follows Clean Architecture principles and is organized into the following projects:
 
 ### Core Projects
 
-- **EveryoneCodes.Core** - Contains domain models and interfaces
+- **EveryoneCodes.Core** - Domain models, interfaces, and configuration
 - **EveryoneCodes.Application** - Business logic and application services
-- **EveryoneCodes.Shared** - Shared functionality including CSV data storage
+- **EveryoneCodes.Infrastructure** - Data access, parsers, and external dependencies
 
 ### Application Projects
 
-- **EveryoneCodes.Api** - Web API for camera management
+- **EveryoneCodes.Api** - Web API for camera management with global exception handling
 - **EveryoneCodes.Cli** - Command-line interface for camera search
 
 ### Test Projects
@@ -34,6 +34,18 @@ The solution is organized into the following projects:
 - Parse camera data from embedded CSV files
 - Extract camera codes, names, and coordinates
 
+### API Features
+- **Global Exception Handling** - Centralized error handling with structured JSON responses
+- **CORS Support** - Configured for Angular development (localhost:4200)
+- **OpenAPI Documentation** - Swagger/Scalar API documentation
+- **Configuration Management** - Configurable camera store settings with caching support
+
+### Architecture Features
+- **Dependency Injection** - Comprehensive DI container setup
+- **Modular Design** - Separate parsers, resource readers, and data stores
+- **Clean Architecture** - Clear separation of concerns across layers
+- **Configuration System** - Flexible settings with environment-specific configurations
+
 ### Data Model
 Each camera contains:
 - **Number**: Numeric identifier extracted from camera code
@@ -44,6 +56,20 @@ Each camera contains:
 
 ### Data Source
 The application uses embedded CSV data (`cameras-defb.csv`) containing camera information for what appears to be a traffic monitoring system (likely Utrecht, Netherlands based on the "UTR" prefix).
+
+### Error Handling
+The API includes a comprehensive global exception handler that:
+- Provides structured JSON error responses
+- Maps exceptions to appropriate HTTP status codes
+- Includes request tracing with TraceId
+- Shows detailed error information in development mode
+- Returns sanitized error messages in production mode
+
+### Configuration
+The application supports flexible configuration through `CameraStoreSettings`:
+- **ResourcePath**: Path to embedded CSV resource (default: "Data.cameras-defb.csv")
+- **EnableCaching**: Enable/disable caching (default: true)
+- **CacheExpiration**: Cache expiration time (default: 30 minutes)
 
 ## Getting Started
 
@@ -78,6 +104,7 @@ dotnet run
 The API will be available at:
 - HTTP: `https://localhost:7028` or `http://localhost:5036`
 - Scalar UI: `https://localhost:7028/scalar/v1`
+- Root redirect: `https://localhost:7028/` (redirects to Scalar UI in development)
 
 ### API Endpoints
 
@@ -94,6 +121,19 @@ GET /api/cameras/search?name={searchTerm}
 Example:
 ```http
 GET /api/cameras/search?name=Neude
+```
+
+#### Error Response Format
+When errors occur, the API returns structured JSON responses:
+```json
+{
+  "error": {
+    "message": "A required parameter is missing.",
+    "details": "Detailed error information (development only)",
+    "timestamp": "2024-01-15T10:30:00.000Z",
+    "traceId": "0HMQ7Q5Q5Q5Q5Q5Q5Q5Q5Q5Q5Q5Q5"
+  }
+}
 ```
 
 ### Running the CLI Application
@@ -129,21 +169,32 @@ dotnet test EveryoneCodes.Application.Tests
 ```
 EveryoneCodes/
 ├── EveryoneCodes.Core/           # Domain models and interfaces
+│   ├── Configuration/
+│   │   └── CameraStoreSettings.cs # Configuration settings
 │   ├── Models/
 │   │   └── Camera.cs            # Camera domain model
 │   └── Interfaces/
-│       └── ICameraService.cs    # Camera service interface
+│       ├── ICameraService.cs    # Camera service interface
+│       ├── ICameraStore.cs      # Data store interface
+│       ├── ICsvParser.cs        # CSV parser interface
+│       └── IResourceReader.cs   # Resource reader interface
 ├── EveryoneCodes.Application/    # Business logic
 │   └── CameraService.cs         # Camera service implementation
-├── EveryoneCodes.Shared/         # Shared functionality
+├── EveryoneCodes.Infrastructure/ # Data access and external dependencies
 │   ├── Data/
 │   │   └── cameras-defb.csv     # Embedded camera data
-│   ├── Interfaces/
-│   │   └── ICameraStore.cs      # Data store interface
+│   ├── Extensions/
+│   │   └── ServiceCollectionExtensions.cs # DI configuration
+│   ├── Parsers/
+│   │   └── CameraCsvParser.cs   # CSV parser implementation
+│   ├── ResourceReaders/
+│   │   └── EmbeddedResourceReader.cs # Embedded resource reader
 │   └── EmbeddedCsvCameraStore.cs # CSV data store implementation
 ├── EveryoneCodes.Api/            # Web API
 │   ├── Controllers/
 │   │   └── CamerasController.cs # Camera API endpoints
+│   ├── Middleware/
+│   │   └── GlobalExceptionHandlerMiddleware.cs # Global error handling
 │   └── Program.cs               # API startup configuration
 ├── EveryoneCodes.Cli/            # Command-line interface
 │   ├── Program.cs               # CLI entry point
@@ -164,9 +215,23 @@ EveryoneCodes/
 ### Adding New Features
 1. Define interfaces in `EveryoneCodes.Core`
 2. Implement business logic in `EveryoneCodes.Application`
-3. Add API endpoints in `EveryoneCodes.Api`
-4. Update CLI commands in `EveryoneCodes.Cli`
-5. Add comprehensive tests
+3. Add infrastructure implementations in `EveryoneCodes.Infrastructure`
+4. Register services in `ServiceCollectionExtensions`
+5. Add API endpoints in `EveryoneCodes.Api`
+6. Update CLI commands in `EveryoneCodes.Cli`
+7. Add comprehensive tests
+
+### Configuration
+Configuration can be customized in `appsettings.json`:
+```json
+{
+  "CameraStore": {
+    "ResourcePath": "Data.cameras-defb.csv",
+    "EnableCaching": true,
+    "CacheExpiration": "00:30:00"
+  }
+}
+```
 
 ### Code Style
 - Uses nullable reference types
@@ -174,6 +239,8 @@ EveryoneCodes/
 - Clean Architecture principles
 - Dependency injection throughout
 - Comprehensive logging
+- Global exception handling
+- Structured error responses
 
 ## Contributing
 
