@@ -45,16 +45,20 @@ builder.Logging.AddSimpleConsole(o =>
 });
 builder.Logging.SetMinimumLevel(LogLevel.Information);
 
-// Configuration - Add default settings for CLI
-builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
-{
-    ["CameraStore:ResourcePath"] = "Data.cameras-defb.csv",
-    ["CameraStore:EnableCaching"] = "false", // CLI doesn't need caching
-    ["CameraStore:CacheExpiration"] = "00:01:00"
-});
+// Option 1: Embedded CSV (default behavior - reads from embedded resource)
+// builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
+// {
+//     ["CameraStore:ResourcePath"] = "Data.cameras-defb.csv",
+//     ["CameraStore:EnableCaching"] = "false", // CLI doesn't need caching
+//     ["CameraStore:CacheExpiration"] = "00:01:00"
+// });
+// builder.Services.AddCameraInfrastructure(builder.Configuration);
 
-// Register the new infrastructure
-builder.Services.AddCameraInfrastructure(builder.Configuration);
+// Option 2: File-based CSV (reads from Data/cameras-defb.csv file)
+var currentDir = Directory.GetCurrentDirectory();
+var solutionRoot = Directory.GetParent(currentDir)?.FullName ?? currentDir;
+var csvFilePath = Path.Combine(solutionRoot, "Data", "cameras-defb.csv");
+builder.Services.AddCameraRepository(csvFilePath);
 
 // App service
 builder.Services.AddScoped<ICameraService, CameraService>();

@@ -54,8 +54,22 @@ Each camera contains:
 - **Latitude**: Geographic latitude coordinate
 - **Longitude**: Geographic longitude coordinate
 
-### Data Source
-The application uses embedded CSV data (`cameras-defb.csv`) containing camera information for what appears to be a traffic monitoring system (likely Utrecht, Netherlands based on the "UTR" prefix).
+### Data Source Options
+The application supports two ways to read camera data:
+
+#### Option 1: Embedded CSV (Default)
+- Reads camera data from an embedded resource
+- Data is compiled into the application
+- No external file dependencies
+- Better for production deployments
+
+#### Option 2: File-based CSV
+- Reads camera data from a CSV file on disk
+- File location: `Data/cameras-defb.csv`
+- Allows for dynamic data updates without recompiling
+- Better for development and testing
+
+The application uses CSV data (`cameras-defb.csv`) containing camera information for what appears to be a traffic monitoring system (likely Utrecht, Netherlands based on the "UTR" prefix).
 
 ### Error Handling
 The API includes a comprehensive global exception handler that:
@@ -66,6 +80,40 @@ The API includes a comprehensive global exception handler that:
 - Returns sanitized error messages in production mode
 
 ### Configuration
+
+#### Data Source Configuration
+You can switch between embedded and file-based CSV data sources in both the API and CLI projects:
+
+##### API Project (EveryoneCodes.Api/Program.cs)
+```csharp
+// Option 1: Embedded CSV (default)
+builder.Services.AddCameraInfrastructure(builder.Configuration);
+
+// Option 2: File-based CSV
+var solutionRoot = Directory.GetParent(builder.Environment.ContentRootPath)?.FullName ?? builder.Environment.ContentRootPath;
+var csvFilePath = Path.Combine(solutionRoot, "Data", "cameras-defb.csv");
+builder.Services.AddCameraRepository(csvFilePath);
+```
+
+##### CLI Project (EveryoneCodes.Cli/Program.cs)
+```csharp
+// Option 1: Embedded CSV (default)
+builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
+{
+    ["CameraStore:ResourcePath"] = "Data.cameras-defb.csv",
+    ["CameraStore:EnableCaching"] = "false",
+    ["CameraStore:CacheExpiration"] = "00:01:00"
+});
+builder.Services.AddCameraInfrastructure(builder.Configuration);
+
+// Option 2: File-based CSV
+var currentDir = Directory.GetCurrentDirectory();
+var solutionRoot = Directory.GetParent(currentDir)?.FullName ?? currentDir;
+var csvFilePath = Path.Combine(solutionRoot, "Data", "cameras-defb.csv");
+builder.Services.AddCameraRepository(csvFilePath);
+```
+
+#### Camera Store Settings
 The application supports flexible configuration through `CameraStoreSettings`:
 - **ResourcePath**: Path to embedded CSV resource (default: "Data.cameras-defb.csv")
 - **EnableCaching**: Enable/disable caching (default: true)
@@ -176,6 +224,7 @@ EveryoneCodes/
 │   └── Interfaces/
 │       ├── ICameraService.cs    # Camera service interface
 │       ├── ICameraStore.cs      # Data store interface
+│       ├── ICameraRepository.cs # Camera repository interface
 │       ├── ICsvParser.cs        # CSV parser interface
 │       └── IResourceReader.cs   # Resource reader interface
 ├── EveryoneCodes.Application/    # Business logic
@@ -187,6 +236,8 @@ EveryoneCodes/
 │   │   └── ServiceCollectionExtensions.cs # DI configuration
 │   ├── Parsers/
 │   │   └── CameraCsvParser.cs   # CSV parser implementation
+│   ├── Repositories/
+│   │   └── CameraRepository.cs  # File-based camera repository
 │   ├── ResourceReaders/
 │   │   └── EmbeddedResourceReader.cs # Embedded resource reader
 │   └── EmbeddedCsvCameraStore.cs # CSV data store implementation

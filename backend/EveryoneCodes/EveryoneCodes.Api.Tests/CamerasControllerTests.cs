@@ -2,7 +2,6 @@
 using EveryoneCodes.Core.Interfaces;
 using EveryoneCodes.Core.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace EveryoneCodes.Api.Tests
@@ -22,7 +21,7 @@ namespace EveryoneCodes.Api.Tests
             var svc = new Mock<ICameraService>();
             svc.Setup(s => s.GetAllAsync()).ReturnsAsync(data);
 
-            var ctrl = new CamerasController(svc.Object, NullLogger<CamerasController>.Instance);
+            var ctrl = new CamerasController(svc.Object);
 
             // Act
             var result = await ctrl.GetAllCameras();
@@ -41,7 +40,7 @@ namespace EveryoneCodes.Api.Tests
             var svc = new Mock<ICameraService>();
             svc.Setup(s => s.GetAllAsync()).ReturnsAsync(Array.Empty<Camera>());
 
-            var ctrl = new CamerasController(svc.Object, NullLogger<CamerasController>.Instance);
+            var ctrl = new CamerasController(svc.Object);
 
             // Act
             var result = await ctrl.GetAllCameras();
@@ -60,7 +59,7 @@ namespace EveryoneCodes.Api.Tests
             var svc = new Mock<ICameraService>();
             svc.Setup(s => s.GetAllAsync()).ThrowsAsync(new Exception("boom"));
 
-            var ctrl = new CamerasController(svc.Object, NullLogger<CamerasController>.Instance);
+            var ctrl = new CamerasController(svc.Object);
 
             // Act
             var result = await ctrl.GetAllCameras();
@@ -77,7 +76,7 @@ namespace EveryoneCodes.Api.Tests
         {
             var svc = new Mock<ICameraService>();
 
-            var ctrl = new CamerasController(svc.Object, NullLogger<CamerasController>.Instance);
+            var ctrl = new CamerasController(svc.Object);
             var result = await ctrl.SearchCameras(string.Empty);
 
             Assert.IsType<BadRequestObjectResult>(result);
@@ -90,7 +89,7 @@ namespace EveryoneCodes.Api.Tests
             svc.Setup(s => s.SearchAsync("neude"))
                .ReturnsAsync(new[] { new Camera { Name = "Neude rijbaan" } });
 
-            var ctrl = new CamerasController(svc.Object, NullLogger<CamerasController>.Instance);
+            var ctrl = new CamerasController(svc.Object);
 
             var result = await ctrl.SearchCameras("neude");
             var ok = Assert.IsType<OkObjectResult>(result);

@@ -2,9 +2,11 @@
 using EveryoneCodes.Core.Interfaces;
 using EveryoneCodes.Core.Models;
 using EveryoneCodes.Infrastructure.Parsers;
+using EveryoneCodes.Infrastructure.Repositories;
 using EveryoneCodes.Infrastructure.ResourceReaders;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace EveryoneCodes.Infrastructure.Extensions
 {
@@ -20,6 +22,22 @@ namespace EveryoneCodes.Infrastructure.Extensions
 
             // Store
             services.AddScoped<ICameraStore, EmbeddedCsvCameraStore>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddCameraRepository(this IServiceCollection services, string csvFilePath)
+        {
+            // Infrastructure services
+            services.AddScoped<ICsvParser<Camera>, CameraCsvParser>();
+
+            // Repository with file path
+            services.AddScoped<ICameraRepository>(provider =>
+            {
+                var csvParser = provider.GetRequiredService<ICsvParser<Camera>>();
+                var logger = provider.GetRequiredService<ILogger<CameraRepository>>();
+                return new CameraRepository(csvParser, csvFilePath, logger);
+            });
 
             return services;
         }
