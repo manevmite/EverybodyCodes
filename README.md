@@ -1,95 +1,252 @@
-# Keep Talking and Everybody Codes
+# EveryoneCodes - Backend Architecture
 
-A repository for showing how you write and think about code.
-Used as a starting point for a good discussion about our job.
+A .NET 9.0 solution for managing and searching camera data with both Web API and CLI interfaces.
 
-## Context
+## Overview
 
-You probably came here because you have a second interview with us. In the second interview, we'd like to dive more into technology. We want to see how you write code, how you think and what you think is important when writing code. To do this we'd like to kickstart our discussion about this.
+EveryoneCodes is a camera management system that provides functionality to search and retrieve camera information from embedded CSV data. The solution follows Clean Architecture principles with clear separation of concerns across multiple projects.
 
-There are many ways to do this. Maybe you have open source projects that you'd like to share. Maybe you'd like to show some code from a previous project. Those would be fine, but maybe you don't have something like that (yet). Therefore, we have this repository: an exercise that can use as a starting point to write some code that we can use as a subject for our discussion.
+## Architecture
 
-You might wonder "Is this a _test_"?
-The answer is very clear to us: **no**!
-_It is something like a test_, but there are some important differences:
+The solution follows Clean Architecture principles and is organized into the following projects:
 
+### Core Projects
 
-- It doesn't decide whether you get invited back (okay, unless you do something _really_ stupid). We already decided that you could come back when we sent you here. So you'll always get the chance to explain your choices.
-- We want you to **timebox this to 2 to 4 hours**. It makes sense that you don't get to finish all in that time. Focus on showing what you think is important, and explain those choices to us.
-- You can fail a 'test', but not this exercise, it's purely used as _input_ for our next talk.
+- **EveryoneCodes.Core** - Domain models, interfaces, and configuration
+- **EveryoneCodes.Application** - Business logic and application services
+- **EveryoneCodes.Infrastructure** - Data access, parsers, and external dependencies
 
-## The exercise
+### Application Projects
 
-The exercise consists of 3 parts in which you use the dataset you can find at [data/cameras-defb.csv](data/cameras-defb.csv).
-You can chose a language and tech stack of your own choice (we are mostly familiar with C#, JavaScript).
+- **EveryoneCodes.Api** - Web API for camera management with global exception handling
+- **EveryoneCodes.Cli** - Command-line interface for camera search
 
-## CLI
+### Test Projects
 
-Make a program that allows the use to search through a CLI a part of the camera _name_, for example:
+- **EveryoneCodes.Api.Tests** - API integration tests
+- **EveryoneCodes.Application.Tests** - Application service tests
 
-```sh
-#.NET Core
-dotnet Search --name Neude
+## Features
+
+### Camera Management
+- Search cameras by name (case-insensitive)
+- Retrieve all cameras
+- Parse camera data from embedded CSV files
+- Extract camera codes, names, and coordinates
+
+### API Features
+- **Global Exception Handling** - Centralized error handling with structured JSON responses
+- **CORS Support** - Configured for Angular development (localhost:4200)
+- **OpenAPI Documentation** - Swagger/Scalar API documentation
+- **Configuration Management** - Configurable camera store settings with caching support
+
+### Architecture Features
+- **Dependency Injection** - Comprehensive DI container setup
+- **Modular Design** - Separate parsers, resource readers, and data stores
+- **Clean Architecture** - Clear separation of concerns across layers
+- **Configuration System** - Flexible settings with environment-specific configurations
+
+### Data Model
+Each camera contains:
+- **Number**: Numeric identifier extracted from camera code
+- **Code**: Camera code (e.g., "UTR-CM-501")
+- **Name**: Human-readable camera name
+- **Latitude**: Geographic latitude coordinate
+- **Longitude**: Geographic longitude coordinate
+
+### Data Source
+The application uses embedded CSV data (`cameras-defb.csv`) containing camera information for what appears to be a traffic monitoring system (likely Utrecht, Netherlands based on the "UTR" prefix).
+
+### Error Handling
+The API includes a comprehensive global exception handler that:
+- Provides structured JSON error responses
+- Maps exceptions to appropriate HTTP status codes
+- Includes request tracing with TraceId
+- Shows detailed error information in development mode
+- Returns sanitized error messages in production mode
+
+### Configuration
+The application supports flexible configuration through `CameraStoreSettings`:
+- **ResourcePath**: Path to embedded CSV resource (default: "Data.cameras-defb.csv")
+- **EnableCaching**: Enable/disable caching (default: true)
+- **CacheExpiration**: Cache expiration time (default: 30 minutes)
+
+## Getting Started
+
+### Prerequisites
+- .NET 9.0 SDK
+- Visual Studio 2022 or VS Code (recommended)
+
+### Building the Solution
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd EveryoneCodes
+
+# Restore dependencies
+dotnet restore
+
+# Build the solution
+dotnet build
 ```
 
-Expected output:
+### Running the Web API
 
-```none
-501 | UTR-CM-501 Neude rijbaan voor Postkantoor | 52.093421 | 5.118278
-503 | UTR-CM-503 Neude plein | 52.093448 | 5.118536
-504 | UTR-CM-504 Neude / Schoutenstraat | 52.092995 | 5.119088
-505 | UTR-CM-505 Neude / Drakenburgstraat / Vinkenurgstraat | 52.092843 | 5.118351
-506 | UTR-CM-506 Vinkenburgstraat / Neude | 52.092378 | 5.117902
-507 | UTR-CM-507 Vinkenburgstraat richting Neude | 52.092234 | 5.117766
+```bash
+# Navigate to the API project
+cd EveryoneCodes.Api
+
+# Run the API
+dotnet run
 ```
 
-## API
+The API will be available at:
+- HTTP: `https://localhost:7028` or `http://localhost:5036`
+- Scalar UI: `https://localhost:7028/scalar/v1`
+- Root redirect: `https://localhost:7028/` (redirects to Scalar UI in development)
 
-Serve the data through a Web-API, such that a web application can fetch the data.
+### API Endpoints
 
-## Web application
+#### Get All Cameras
+```http
+GET /api/cameras
+```
 
-The first part consists of retrieving the data from the API from the previous step.
-Render the data spread over the four columns given in [code/index.html](code/index.html).
-The spreading of the data needs to follow the following rules based on the `number` of the camera:
+#### Search Cameras by Name
+```http
+GET /api/cameras/search?name={searchTerm}
+```
 
-1. If `number` is divisible by 3, then it should go in the first column.
-2. If `number` is divisible by 5, then it should go in the second column.
-3. If `number` is divisible by 3 and divisible by 5, then it should go in the third column.
-4. If `number` is not divisible by 3 and is not  divisible by 5, then it should go in the last column.
+Example:
+```http
+GET /api/cameras/search?name=Neude
+```
 
-The second part consists of showing the camera locations as markers on a map. 
+#### Error Response Format
+When errors occur, the API returns structured JSON responses:
+```json
+{
+  "error": {
+    "message": "A required parameter is missing.",
+    "details": "Detailed error information (development only)",
+    "timestamp": "2024-01-15T10:30:00.000Z",
+    "traceId": "0HMQ7Q5Q5Q5Q5Q5Q5Q5Q5Q5Q5Q5Q5"
+  }
+}
+```
 
-Show _all_ cameras in the `div` with id _map_ in the given [code/index.html](code/index.html).
-You can use your preferred Map-tool, but if you don't have a preference, then we suggest that you look at using a combi of [Leaflet JavaScript library](https://leafletjs.com/examples/quick-start/) with the map pictures via OpenStreetMap (Leaflet uses OpenStreetMap). In that case, [the coordinates 52.0914 by 5.1115 will give you a centered view of Utrecht](https://www.openstreetmap.org/#map=14/52.0914/5.1115).
+### Running the CLI Application
 
-## Wut? Open Source?!
+```bash
+# Navigate to the CLI project
+cd EveryoneCodes.Cli
 
-Yes, this exercise is open source!
+# Run with search term
+dotnet run -- --name "Neude"
+# or
+dotnet run -- -n "Neude"
+```
 
-"_Aren't you afraid people will 'cheat'?_"
-Well, the probability for that wouldn't be much higher that when we would _e-mail_ you an exercise.
-We value being open en honest to eachother, and trust that you'll do this exercise by yourself.
-Besides that, things will show when we actually discuss what you made...
+The CLI will output cameras matching the search term in the format:
+```
+Number | Code Name | Latitude | Longitude
+```
 
-"_Do you accept.... pull requests?_"
-Of course!
-But it isn't the primary goal, so rather focus on the exercise itself.
-Should you have - after the exercise - some suggestions for how to improve, or would you like to correct a typo: keep them PR's coming!
-Or open an issue if you have questions.
+### Running Tests
 
-## About the title
+```bash
+# Run all tests
+dotnet test
 
-Huh?
+# Run tests for a specific project
+dotnet test EveryoneCodes.Api.Tests
+dotnet test EveryoneCodes.Application.Tests
+```
 
-> Keep Talking and Everybody Codes
+## Project Structure
 
-"_What's that?_"
-Sorry, it's a pun related to [a cool game](http://www.keeptalkinggame.com/).
+```
+EveryoneCodes/
+├── EveryoneCodes.Core/           # Domain models and interfaces
+│   ├── Configuration/
+│   │   └── CameraStoreSettings.cs # Configuration settings
+│   ├── Models/
+│   │   └── Camera.cs            # Camera domain model
+│   └── Interfaces/
+│       ├── ICameraService.cs    # Camera service interface
+│       ├── ICameraStore.cs      # Data store interface
+│       ├── ICsvParser.cs        # CSV parser interface
+│       └── IResourceReader.cs   # Resource reader interface
+├── EveryoneCodes.Application/    # Business logic
+│   └── CameraService.cs         # Camera service implementation
+├── EveryoneCodes.Infrastructure/ # Data access and external dependencies
+│   ├── Data/
+│   │   └── cameras-defb.csv     # Embedded camera data
+│   ├── Extensions/
+│   │   └── ServiceCollectionExtensions.cs # DI configuration
+│   ├── Parsers/
+│   │   └── CameraCsvParser.cs   # CSV parser implementation
+│   ├── ResourceReaders/
+│   │   └── EmbeddedResourceReader.cs # Embedded resource reader
+│   └── EmbeddedCsvCameraStore.cs # CSV data store implementation
+├── EveryoneCodes.Api/            # Web API
+│   ├── Controllers/
+│   │   └── CamerasController.cs # Camera API endpoints
+│   ├── Middleware/
+│   │   └── GlobalExceptionHandlerMiddleware.cs # Global error handling
+│   └── Program.cs               # API startup configuration
+├── EveryoneCodes.Cli/            # Command-line interface
+│   ├── Program.cs               # CLI entry point
+│   └── SearchRunner.cs          # Search command runner
+└── [Test Projects]/             # Unit and integration tests
+```
 
-## License and Copyright
+## Dependencies
 
-See [LICENSE.txt](LICENSE.txt) for complete details.
-In short, you may maintain a fork e.g. with a translation at your leasure, as long as you honor the terms of the licenses.
-For merely changing (translating) the README this simply means you should (a) attribute the work to [the original repository from Infi](https://github.com/infi-nl/everybody-codes) and (b) publish your modified version under the same terms to be used by others.
-_Sharing is caring!_ 🧡😊
+### NuGet Packages
+- **CsvHelper** (33.1.0) - CSV parsing functionality
+- **Microsoft.AspNetCore.OpenApi** (9.0.9) - OpenAPI/Swagger support
+- **Microsoft.Extensions.Logging** (9.0.9) - Logging framework
+- **Scalar.AspNetCore** (2.8.5) - Alternative API documentation UI
+
+## Development
+
+### Adding New Features
+1. Define interfaces in `EveryoneCodes.Core`
+2. Implement business logic in `EveryoneCodes.Application`
+3. Add infrastructure implementations in `EveryoneCodes.Infrastructure`
+4. Register services in `ServiceCollectionExtensions`
+5. Add API endpoints in `EveryoneCodes.Api`
+6. Update CLI commands in `EveryoneCodes.Cli`
+7. Add comprehensive tests
+
+### Configuration
+Configuration can be customized in `appsettings.json`:
+```json
+{
+  "CameraStore": {
+    "ResourcePath": "Data.cameras-defb.csv",
+    "EnableCaching": true,
+    "CacheExpiration": "00:30:00"
+  }
+}
+```
+
+### Code Style
+- Uses nullable reference types
+- Implicit usings enabled
+- Clean Architecture principles
+- Dependency injection throughout
+- Comprehensive logging
+- Global exception handling
+- Structured error responses
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
